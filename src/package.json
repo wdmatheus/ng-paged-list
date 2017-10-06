@@ -1,0 +1,27 @@
+{
+    "name": "paged-list",
+    "version": "1.0.0",
+    "description": "Paged list provider",
+    "main": "index.js",
+    "scripts": {
+        "transpile": "ngc",
+        "package": "rollup -c",
+        "minify": "uglifyjs dist/bundles/ng-paged-list.umd.js --screw-ie8 --compress --mangle --comments --output dist/bundles/ng-paged-list.umd.min.js",
+        "build": "npm run transpile && npm run package && npm run minify"
+    },
+    "author": "wdmatheus",
+    "license": "ISC",
+    "dependencies": {
+        "@angular/common": "^4.2.4",
+        "@angular/core": "^4.2.4",
+        "rxjs": "^5.4.2"
+    },
+    "devDependencies": {
+        "@angular/compiler": "^4.2.4",
+        "@angular/compiler-cli": "^4.2.4",
+        "@types/node": "^8.0.32",
+        "rollup": "^0.50.0",
+        "typescript": "^2.5.3",
+        "uglify-js": "^3.1.3"
+    }
+}

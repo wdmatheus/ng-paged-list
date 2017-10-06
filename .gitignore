@@ -1,0 +1,6 @@
+dist/
+node_modules/
+paged-list.config.ngsummary.json
+paged-list.module.ngfactory.ts
+paged-list.module.ngsummary.json
+paged-list.service.ngsummary.json
