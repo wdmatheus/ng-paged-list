@@ -31,10 +31,10 @@ import { PagedListService } from 'ng-paged-list/paged-list.service';
 
 
 @Component({
-    selector: 'app-exemple-list',
-    templateUrl: './exemple-list.component.html'
+    selector: 'app-example-list',
+    templateUrl: './example-list.component.html'
 })
-export class ExempleList implements OnInit {
+export class ExampleList implements OnInit {
     
     constructor() { }
 
