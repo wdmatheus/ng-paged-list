@@ -44,7 +44,8 @@ export class ExempleList implements OnInit {
         this.pagedList = new PagedListService({
             url: 'https://api.paged-list.com,            
             sortField: 'Name',
-            sortType: 'asc'
+            sortType: 'asc',
+            pageSize: 10
         });
         this.pagedList.load();
     }    
