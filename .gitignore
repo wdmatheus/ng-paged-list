@@ -7,3 +7,5 @@ src/paged-list.service.ngsummary.json
 src/dist/bundles/
 src/dist/index.*
 src/dist/paged-list*
+src/package-lock.json
+src/dist/package-lock.json
