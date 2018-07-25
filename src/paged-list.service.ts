@@ -1,12 +1,13 @@
-import { Inject, Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { PagedListModule } from './paged-list.module';
 import { PagedListConfig } from './paged-list.config';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { map, takeWhile } from 'rxjs/operators';
 
 @Injectable()
 export class PagedListService {
 
-    url: string;    
+    url: string;
     sortType: string;
     sortField: string;
     pageIndex: number;
@@ -26,7 +27,7 @@ export class PagedListService {
 
     private http: HttpClient;
 
-    private defaultConfig: PagedListConfig;
+    public isAlive: boolean;
 
     constructor(config: PagedListConfig) {
         this.http = PagedListModule.injector.get(HttpClient);
@@ -36,6 +37,7 @@ export class PagedListService {
         this.pageIndex = config.pageIndex || 1;
         this.pageSize = config.pageSize || 20;
         this.onLoadFinished = config.onLoadFinished;
+        this.isAlive = config.isAlive;
 
         if (!this.url) {
             throw (new Error('URL is empty'));
@@ -48,11 +50,23 @@ export class PagedListService {
         data.pageIndex = this.pageIndex;
         data.sortField = this.sortField;
         data.sortType = this.sortType;
-        this.searchData = Object.assign({}, data);
+        this.searchData = { ...data };
 
         let params = [];
 
         for (let key in this.searchData) {
+
+            if (this.searchData[key] && Array.isArray(this.searchData[key])) {
+
+                let array = <any[]>this.searchData[key];
+
+                for (let i = 0; i < array.length; i++) {
+                    params.push(`${key}=${array[i]}`);
+                }
+
+                continue;
+            }
+
             if (this.searchData[key]) {
                 params.push(`${key}=${this.searchData[key]}`);
             }
@@ -61,15 +75,15 @@ export class PagedListService {
         return qs;
     }
 
-    private resetForSearch(){
+    private resetForSearch() {
         this.sortType = this.sortType || 'asc';
         this.sortField = this.sortField || 'Id';
         this.pageIndex = 1;
     }
 
-    load(data?: any, isSearch: boolean = false) :any {
+    load(data?: any, isSearch: boolean = false): any {
 
-        if(isSearch){
+        if (isSearch) {
             this.resetForSearch();
         }
 
@@ -79,22 +93,27 @@ export class PagedListService {
 
             let params = this.getParams(data);
 
-            return this.http.get<any>(`${this.url}?${params}`).subscribe(response => {
-                this.itens = response.itens;
-                this.totalPages = response.totalPages;
-                this.totalRows = response.totalRows;
-                this.error = false;
-                this.loading = false;
-                this.additionalData = response.additionalData || null;
-                if (this.onLoadFinished) {
-                    this.onLoadFinished();
-                }
-            }, error => {
-                this.error = true;
-                this.loading = false;
-            });
+            return this.http.get<any>(`${this.url}?${params}`)
+                .pipe(                   
+                    takeWhile(() => this.isAlive),
+                    map(response => response)                    
+                )
+                .subscribe(response => {
+                    this.itens = response.itens;
+                    this.totalPages = response.totalPages;
+                    this.totalRows = response.totalRows;
+                    this.error = false;
+                    this.loading = false;
+                    this.additionalData = response.additionalData || null;
+                    if (this.onLoadFinished) {
+                        this.onLoadFinished();
+                    }
+                }, error => {
+                    this.error = true;
+                    this.loading = false;
+                });
         }
-    }    
+    }
 
     sort(field: string) {
         this.sortType = this.sortField != field ? 'asc' : this.sortType == 'asc' ? 'desc' : 'asc';

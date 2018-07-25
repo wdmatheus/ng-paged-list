@@ -4,5 +4,6 @@ export class PagedListConfig{
     sortField?: string;
     pageIndex?: number;
     pageSize?: number;    
-    onLoadFinished?: Function
+    onLoadFinished?: Function;
+    isAlive:boolean = true;
 }

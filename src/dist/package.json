@@ -1,13 +1,13 @@
 {
   "name": "ng-paged-list",
-  "version": "1.0.3",
+  "version": "1.0.8",
   "description": "Paged list provider",
   "main": "bundles/ng-paged-list.umd.js",
   "module": "index.js",
   "typings": "index.d.ts",
   "keywords": [
     "angular",
-    "angular4",
+    "angular6",
     "Paged list"
   ],
   "author": "wdmatheus",
@@ -21,8 +21,9 @@
     "url": "https://github.com/youraccount/ng-paged-list/issues"
   },
   "peerDependencies": {
-    "@angular/common": "^4.2.4",
-    "@angular/core": "^4.2.4",
-    "rxjs": "^5.4.2"
+    "@angular/common": "^6.0.3",
+    "@angular/core": "^6.0.3",
+    "rxjs": "^6.0.0",
+    "zone.js": "^0.8.26"
   }
 }
