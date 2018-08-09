@@ -5,5 +5,6 @@ export class PagedListConfig{
     pageIndex?: number;
     pageSize?: number;    
     onLoadFinished?: Function;
-    isAlive:boolean = true;
+    isAlive?:boolean = true;
+    isPost?: boolean = false;
 }

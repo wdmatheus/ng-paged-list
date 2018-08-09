@@ -1,6 +1,6 @@
 import { PagedListModule } from './paged-list.module';
 import { PagedListConfig } from './paged-list.config';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, takeWhile } from 'rxjs/operators';
 
@@ -21,13 +21,14 @@ export class PagedListService {
     totalPages: number = 1;
     additionalData: any;
 
-    private endPointUrl: string;
 
     private searchData: any;
 
     private http: HttpClient;
 
-    public isAlive: boolean;
+    public isAlive: boolean;  
+    
+    public isPost: boolean;
 
     constructor(config: PagedListConfig) {
         this.http = PagedListModule.injector.get(HttpClient);
@@ -38,6 +39,7 @@ export class PagedListService {
         this.pageSize = config.pageSize || 20;
         this.onLoadFinished = config.onLoadFinished;
         this.isAlive = config.isAlive;
+        this.isPost = config.isPost;
 
         if (!this.url) {
             throw (new Error('URL is empty'));
@@ -93,25 +95,27 @@ export class PagedListService {
 
             let params = this.getParams(data);
 
-            return this.http.get<any>(`${this.url}?${params}`)
-                .pipe(                   
-                    takeWhile(() => this.isAlive),
-                    map(response => response)                    
-                )
-                .subscribe(response => {
-                    this.itens = response.itens;
-                    this.totalPages = response.totalPages;
-                    this.totalRows = response.totalRows;
-                    this.error = false;
-                    this.loading = false;
-                    this.additionalData = response.additionalData || null;
-                    if (this.onLoadFinished) {
-                        this.onLoadFinished();
-                    }
-                }, error => {
-                    this.error = true;
-                    this.loading = false;
-                });
+            let observable = this.isPost 
+                ? this.http.post<any>(this.url, this.searchData)
+                : this.http.get<any>(`${this.url}?${params}`);
+           
+            observable.pipe(                   
+                takeWhile(() => this.isAlive),
+                map(response => response)                    
+            ).subscribe(response => {
+                this.itens = response.itens;
+                this.totalPages = response.totalPages;
+                this.totalRows = response.totalRows;
+                this.error = false;
+                this.loading = false;
+                this.additionalData = response.additionalData || null;
+                if (this.onLoadFinished) {
+                    this.onLoadFinished();
+                }
+            }, error => {
+                this.error = true;
+                this.loading = false;
+            });
         }
     }
 
