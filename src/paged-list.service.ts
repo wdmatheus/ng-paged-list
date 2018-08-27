@@ -12,7 +12,6 @@ export class PagedListService {
     sortField: string;
     pageIndex: number;
     pageSize: number;
-    totalRows: number;
     onLoadFinished?: Function;
 
     itens: any[] = [];
@@ -20,7 +19,7 @@ export class PagedListService {
     error: boolean = false;
     totalPages: number = 1;
     additionalData: any;
-
+    totalRecords: number = 0;
 
     private searchData: any;
 
@@ -105,7 +104,7 @@ export class PagedListService {
             ).subscribe(response => {
                 this.itens = response.itens;
                 this.totalPages = response.totalPages;
-                this.totalRows = response.totalRows;
+                this.totalRecords = response.totalRecords;
                 this.error = false;
                 this.loading = false;
                 this.additionalData = response.additionalData || null;
