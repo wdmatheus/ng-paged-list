@@ -2,7 +2,7 @@ import { PagedListModule } from './paged-list.module';
 import { PagedListConfig } from './paged-list.config';
 import { HttpClient, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, takeWhile } from 'rxjs/operators';
+import { map, takeWhile, finalize } from 'rxjs/operators';
 
 @Injectable()
 export class PagedListService {
@@ -37,7 +37,7 @@ export class PagedListService {
         this.pageIndex = config.pageIndex || 1;
         this.pageSize = config.pageSize || 20;
         this.onLoadFinished = config.onLoadFinished;
-        this.isAlive = config.isAlive;
+        this.isAlive = config.isAlive == null ? true : config.isAlive;
         this.isPost = config.isPost;
 
         if (!this.url) {
@@ -100,6 +100,7 @@ export class PagedListService {
            
             observable.pipe(                   
                 takeWhile(() => this.isAlive),
+                finalize(() => this.loading = false),
                 map(response => response)                    
             ).subscribe(response => {
                 this.itens = response.itens;
@@ -112,8 +113,7 @@ export class PagedListService {
                     this.onLoadFinished();
                 }
             }, error => {
-                this.error = true;
-                this.loading = false;
+                this.error = true;                
             });
         }
     }

@@ -1,13 +1,13 @@
 {
   "name": "ng-paged-list",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "Paged list provider",
   "main": "bundles/ng-paged-list.umd.js",
   "module": "index.js",
   "typings": "index.d.ts",
   "keywords": [
     "angular",
-    "angular6",
+    "angular7",
     "Paged list"
   ],
   "author": "wdmatheus",
@@ -23,7 +23,7 @@
   "peerDependencies": {
     "@angular/common": "^6.0.3",
     "@angular/core": "^6.0.3",
-    "rxjs": "^6.0.0",
+    "rxjs": "^6.3.3",
     "zone.js": "^0.8.26"
   }
 }
