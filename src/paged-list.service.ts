@@ -7,27 +7,27 @@ import { map, takeWhile, finalize } from 'rxjs/operators';
 @Injectable()
 export class PagedListService {
 
-    url: string;
-    sortType: string;
-    sortField: string;
-    pageIndex: number;
-    pageSize: number;
-    onLoadFinished?: Function;
+    public url: string;
+    public sortType: string;
+    public sortField: string;
+    public pageIndex: number;
+    public pageSize: number;
+    public onLoadFinished?: Function;
 
-    itens: any[] = [];
-    loading: boolean = false;
-    error: boolean = false;
-    totalPages: number = 1;
-    additionalData: any;
-    totalRecords: number = 0;
+    public itens: any[] = [];
+    public loading: boolean = false;
+    public error: boolean = false;
+    public totalPages: number = 1;
+    public additionalData: any;
+    public totalRecords: number = 0;
 
-    private searchData: any;
-
-    private http: HttpClient;
+    public searchData: any;
 
     public isAlive: boolean;  
     
     public isPost: boolean;
+
+    private http: HttpClient;    
 
     constructor(config: PagedListConfig) {
         this.http = PagedListModule.injector.get(HttpClient);
